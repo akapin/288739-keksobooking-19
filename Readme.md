@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Александр Капин](https://up.htmlacademy.ru/javascript/19/user/288739).
-* Наставник: `Неизвестно`.
+* Наставник: [Денис Быков](https://htmlacademy.ru/profile/id66426).
 
 ---
 
