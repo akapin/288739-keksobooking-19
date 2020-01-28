@@ -46,35 +46,38 @@ var getRandomArray = function (items) {
   return newArray;
 };
 
+var generateOffer = function (offerId) {
+  return {
+    author: {
+      avatar: 'img/avatars/user0' + offerId + '.png'
+    },
+    offer: {
+      title: 'Offer #' + offerId,
+      address: getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER)
+                + ', ' + getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER),
+      price: getRandomNumber(MIN_PRICE, MAX_PRICE),
+      type: getRandomItemFromArray(OFFER_TYPES),
+      rooms: getRandomNumber(ROOMS_MIN_NUMBER, ROOMS_MAX_NUMBER),
+      guests: getRandomNumber(GUESTS_MIN_NUMBER, GUESTS_MAX_NUMBER),
+      checkin: getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
+      checkout: getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
+      features: getRandomArray(OFFER_FEATURES),
+      description: 'Offer #' + offerId + ' description',
+      photos: getRandomArray(OFFER_PHOTOS),
+    },
+    location: {
+      x: getRandomNumber(LOCATION_X_MIN_NUMBER, LOCATION_X_MAX_NUMBER),
+      y: getRandomNumber(LOCATION_Y_MIN_NUMBER, LOCATION_Y_MAX_NUMBER)
+    }
+  };
+};
+
 var generateOffers = function () {
   var offers = [];
 
   for (var i = 1; i <= 8; i++) {
-    offers.push(
-        {
-          author: {
-            avatar: 'img/avatars/user0' + i + '.png'
-          },
-          offer: {
-            title: 'Offer #' + i,
-            address: getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER)
-                      + ', ' + getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER),
-            price: getRandomNumber(MIN_PRICE, MAX_PRICE),
-            type: getRandomItemFromArray(OFFER_TYPES),
-            rooms: getRandomNumber(ROOMS_MIN_NUMBER, ROOMS_MAX_NUMBER),
-            guests: getRandomNumber(GUESTS_MIN_NUMBER, GUESTS_MAX_NUMBER),
-            checkin: getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
-            checkout: getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
-            features: getRandomArray(OFFER_FEATURES),
-            description: 'Offer #' + i + ' description',
-            photos: getRandomArray(OFFER_PHOTOS),
-          },
-          location: {
-            x: getRandomNumber(LOCATION_X_MIN_NUMBER, LOCATION_X_MAX_NUMBER),
-            y: getRandomNumber(LOCATION_Y_MIN_NUMBER, LOCATION_Y_MAX_NUMBER)
-          }
-        }
-    );
+    var offer = generateOffer(i);
+    offers.push(offer);
   }
 
   return offers;
