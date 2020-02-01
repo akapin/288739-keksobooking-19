@@ -35,15 +35,12 @@ var getRandomNumber = function (minNumber, maxNumber) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var getRandomArray = function (items) {
-  var minNumber = 1;
-  var maxNumber = items.length;
-  var newArray = [];
-
-  for (var i = maxNumber; i >= getRandomNumber(minNumber, maxNumber); i--) {
-    var randomItem = items.splice(Math.floor(Math.random() * items.length), 1);
-    newArray.push(randomItem[0]);
-  }
+var getRandomArray = function (array) {
+  var startIndex = 0;
+  var minNumberOfNewArrayItems = 1;
+  var maxNumberOfNewArrayItems = array.length;
+  var numberOfNewArrayItems = getRandomNumber(minNumberOfNewArrayItems, maxNumberOfNewArrayItems)
+  var newArray = array.splice(startIndex, numberOfNewArrayItems)
   return newArray;
 };
 
