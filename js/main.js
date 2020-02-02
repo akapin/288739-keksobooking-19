@@ -29,6 +29,7 @@ var ACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
 var ACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT = 87;
 var NUMBER_OF_OFFERS = 8;
 var ENTER_KEY = 'Enter';
+var ROOM_CAPACITY_INVALID_CHOICE_TEXT = 'Выбранное количество комнат не соответствует выбранному количеству гостей';
 
 var getRandomItemFromArray = function (items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -185,11 +186,7 @@ var activatePage = function () {
   for (var j = 0; j < adFormFieldsets.length; j++) {
     adFormFieldsets[j].removeAttribute('disabled');
   }
-  if (roomNumberSelect.value !== capacitySelect.value) {
-    roomNumberSelect.setCustomValidity('Выбранное количество комнат не совпадает с выбранным количеством гостей');
-  } else {
-    roomNumberSelect.setCustomValidity('');
-  }
+  roomCapacityCustomValidation();
   var offers = generateOffers();
   renderOffers(offers);
 };
@@ -206,43 +203,47 @@ var fillActivePageAddressValue = function () {
   adFormAddressField.value = addressX + ', ' + addressY;
 };
 
-mapMainPin.addEventListener('mousedown', function (evt) {
+var roomCapacityCustomValidation = function () {
+  var roomNumberSelectValue = parseInt(roomNumberSelect.value, 10);
+  var capacitySelectValue = parseInt(capacitySelect.value, 10);
+  if (capacitySelectValue !== 0 && roomNumberSelectValue < capacitySelectValue) {
+    roomNumberSelect.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+  } else if (capacitySelectValue === 0 && roomNumberSelectValue !== 100) {
+    roomNumberSelect.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+  } else if (roomNumberSelectValue === 100 && capacitySelectValue !== 0) {
+    roomNumberSelect.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+  } else {
+    roomNumberSelect.setCustomValidity('');
+  }
+};
+
+var onMapMainPinMousedown = function (evt) {
   if (evt.button === 0) {
     activatePage();
     fillActivePageAddressValue();
   }
-});
+};
 
-mapMainPin.addEventListener('keydown', function (evt) {
+var onMapMainPinKeydown = function (evt) {
   if (evt.key === ENTER_KEY) {
     activatePage();
     fillActivePageAddressValue();
   }
-});
+};
 
-roomNumberSelect.addEventListener('invalid', function () {
+var onRoomNumberSelectInvalid = function () {
   if (roomNumberSelect.validity.customError) {
-    roomNumberSelect.setCustomValidity('Выбранное количество комнат не совпадает с выбранным количеством гостей');
+    roomNumberSelect.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
   } else {
     roomNumberSelect.setCustomValidity('');
   }
-});
+};
 
-roomNumberSelect.addEventListener('change', function () {
-  if (roomNumberSelect.value !== capacitySelect.value) {
-    roomNumberSelect.setCustomValidity('Выбранное количество комнат не совпадает с выбранным количеством гостей');
-  } else {
-    roomNumberSelect.setCustomValidity('');
-  }
-});
-
-capacitySelect.addEventListener('change', function () {
-  if (roomNumberSelect.value !== capacitySelect.value) {
-    roomNumberSelect.setCustomValidity('Выбранное количество комнат не совпадает с выбранным количеством гостей');
-  } else {
-    roomNumberSelect.setCustomValidity('');
-  }
-});
+mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
+mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
+roomNumberSelect.addEventListener('invalid', onRoomNumberSelectInvalid);
+roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
+capacitySelect.addEventListener('change', roomCapacityCustomValidation);
 
 initPage();
 
