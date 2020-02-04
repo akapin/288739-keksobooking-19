@@ -169,22 +169,24 @@ var capacitySelect = adForm.querySelector('select[id=capacity]');
 
 var initPage = function () {
   for (var i = 0; i < mapFilters.length; i++) {
-    mapFilters[i].setAttribute('disabled', 'disabled');
+    mapFilters[i].disabled = true;
   }
   for (var j = 0; j < adFormFieldsets.length; j++) {
-    adFormFieldsets[j].setAttribute('disabled', 'disabled');
+    adFormFieldsets[j].disabled = true;
   }
   fillInitialAddressValue();
 };
 
 var activatePage = function () {
+  mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
+  mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   for (var i = 0; i < mapFilters.length; i++) {
-    mapFilters[i].removeAttribute('disabled');
+    mapFilters[i].disabled = false;
   }
   for (var j = 0; j < adFormFieldsets.length; j++) {
-    adFormFieldsets[j].removeAttribute('disabled');
+    adFormFieldsets[j].disabled = false;
   }
   roomCapacityCustomValidation();
   var offers = generateOffers();
