@@ -29,7 +29,6 @@ var ACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
 var ACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT = 87;
 var NUMBER_OF_OFFERS = 8;
 var ENTER_KEY = 'Enter';
-var ROOM_CAPACITY_INVALID_CHOICE_TEXT = 'Выбранное количество комнат не соответствует выбранному количеству гостей';
 
 var getRandomItemFromArray = function (items) {
   return items[Math.floor(Math.random() * items.length)];
