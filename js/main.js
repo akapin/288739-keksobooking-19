@@ -29,6 +29,7 @@ var ACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
 var ACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT = 87;
 var NUMBER_OF_OFFERS = 8;
 var ENTER_KEY = 'Enter';
+var ROOM_CAPACITY_INVALID_CHOICE_TEXT = 'Выбранное количество комнат не соответствует выбранному количеству гостей';
 
 var getRandomItemFromArray = function (items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -187,7 +188,7 @@ var activatePage = function () {
   for (var j = 0; j < adFormFieldsets.length; j++) {
     adFormFieldsets[j].disabled = false;
   }
-  disableUnsuitableRoomCapacityOptions();
+  roomCapacityCustomValidation();
   var offers = generateOffers();
   renderOffers(offers);
 };
@@ -204,15 +205,16 @@ var fillActivePageAddressValue = function () {
   adFormAddressField.value = addressX + ', ' + addressY;
 };
 
-var disableUnsuitableRoomCapacityOptions = function () {
+var roomCapacityCustomValidation = function () {
   var capacitySelectOptions = capacitySelect.querySelectorAll('option');
-  var selectedNumberOfRooms = roomNumberSelect.value;
+  var selectedNumberOfRooms = parseInt(roomNumberSelect.value, 10);
+  var selectedRoomCapacity = parseInt(capacitySelect.value, 10);
 
   var selectMap = {
-    '1': ['1'],
-    '2': ['1', '2'],
-    '3': ['1', '2', '3'],
-    '100': ['0'],
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0],
   };
 
   for (var i = 0; i < capacitySelectOptions.length; i++) {
@@ -220,9 +222,20 @@ var disableUnsuitableRoomCapacityOptions = function () {
   }
 
   for (var j = 0; j < capacitySelectOptions.length; j++) {
-    if (!selectMap[selectedNumberOfRooms].includes(capacitySelectOptions[j].value)) {
+    var capacityOptionValue = parseInt(capacitySelectOptions[j].value, 10);
+    if (!selectMap[selectedNumberOfRooms].includes(capacityOptionValue)) {
       capacitySelectOptions[j].disabled = true;
     }
+  }
+
+  if (selectedRoomCapacity !== 0 && selectedNumberOfRooms < selectedRoomCapacity) {
+    roomNumberSelect.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+  } else if (selectedRoomCapacity === 0 && selectedNumberOfRooms !== 100) {
+    roomNumberSelect.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+  } else if (selectedNumberOfRooms === 100 && selectedRoomCapacity !== 0) {
+    roomNumberSelect.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+  } else {
+    roomNumberSelect.setCustomValidity('');
   }
 };
 
@@ -242,8 +255,8 @@ var onMapMainPinKeydown = function (evt) {
 
 mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
 mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
-roomNumberSelect.addEventListener('change', disableUnsuitableRoomCapacityOptions);
-capacitySelect.addEventListener('change', disableUnsuitableRoomCapacityOptions);
+roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
+capacitySelect.addEventListener('change', roomCapacityCustomValidation);
 
 initPage();
 
