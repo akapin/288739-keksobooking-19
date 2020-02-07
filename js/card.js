@@ -50,6 +50,6 @@
   };
 
   window.card = {
-    generateOfferCard: generateOfferCard
+    generate: generateOfferCard
   };
 })();

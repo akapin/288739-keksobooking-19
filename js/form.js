@@ -75,7 +75,7 @@
   };
 
   window.form = {
-    initAdForm: initAdForm,
+    init: initAdForm,
     fillActivePageAddressValue: fillActivePageAddressValue,
     roomCapacityCustomValidation: roomCapacityCustomValidation
   };

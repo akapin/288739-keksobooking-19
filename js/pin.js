@@ -18,6 +18,6 @@
   };
 
   window.pin = {
-    generatePinElement: generatePinElement
+    generate: generatePinElement
   };
 })();

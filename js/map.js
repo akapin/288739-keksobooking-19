@@ -15,14 +15,14 @@
     var mapPinsElement = map.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < offers.length; i++) {
-      fragment.appendChild(window.pin.generatePinElement(offers[i]));
+      fragment.appendChild(window.pin.generate(offers[i]));
     }
     mapPinsElement.appendChild(fragment);
   };
 
   // var renderOfferCard = function (offers) {
   //   var mapFiltersContainer = map.querySelector('.map__filters-container');
-  //   var offerCard = window.card.generateOfferCard(offers[0]);
+  //   var offerCard = window.card.generate(offers[0]);
   //   map.insertBefore(offerCard, mapFiltersContainer);
   // };
 
@@ -67,7 +67,7 @@
     mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
     disableFiltersForm();
-    window.form.initAdForm();
+    window.form.init();
   };
 
   initPage();
