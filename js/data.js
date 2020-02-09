@@ -23,25 +23,6 @@
   var LOCATION_Y_MAX_NUMBER = 630;
   var NUMBER_OF_OFFERS = 8;
 
-  var getRandomItemFromArray = function (items) {
-    return items[Math.floor(Math.random() * items.length)];
-  };
-
-  var getRandomNumber = function (minNumber, maxNumber) {
-    var min = Math.ceil(minNumber);
-    var max = Math.floor(maxNumber);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  var getRandomArray = function (array) {
-    var startIndex = 0;
-    var minNumberOfNewArrayItems = 1;
-    var maxNumberOfNewArrayItems = array.length;
-    var numberOfNewArrayItems = getRandomNumber(minNumberOfNewArrayItems, maxNumberOfNewArrayItems);
-    var newArray = array.splice(startIndex, numberOfNewArrayItems);
-    return newArray;
-  };
-
   var generateOffer = function (offerId) {
     return {
       author: {
@@ -49,21 +30,21 @@
       },
       offer: {
         title: 'Offer #' + offerId,
-        address: getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER)
-                  + ', ' + getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER),
-        price: getRandomNumber(MIN_PRICE, MAX_PRICE),
-        type: getRandomItemFromArray(OFFER_TYPES),
-        rooms: getRandomNumber(ROOMS_MIN_NUMBER, ROOMS_MAX_NUMBER),
-        guests: getRandomNumber(GUESTS_MIN_NUMBER, GUESTS_MAX_NUMBER),
-        checkin: getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
-        checkout: getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
-        features: getRandomArray(OFFER_FEATURES),
+        address: window.utils.getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER)
+                  + ', ' + window.utils.getRandomNumber(ADDRESS_COORDINATE_MIN_NUMBER, ADDRESS_COORDINATE_MAX_NUMBER),
+        price: window.utils.getRandomNumber(MIN_PRICE, MAX_PRICE),
+        type: window.utils.getRandomItemFromArray(OFFER_TYPES),
+        rooms: window.utils.getRandomNumber(ROOMS_MIN_NUMBER, ROOMS_MAX_NUMBER),
+        guests: window.utils.getRandomNumber(GUESTS_MIN_NUMBER, GUESTS_MAX_NUMBER),
+        checkin: window.utils.getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
+        checkout: window.utils.getRandomItemFromArray(CHECKIN_CHECKOUT_TIMES),
+        features: window.utils.getRandomArray(OFFER_FEATURES),
         description: 'Offer #' + offerId + ' description',
-        photos: getRandomArray(OFFER_PHOTOS),
+        photos: window.utils.getRandomArray(OFFER_PHOTOS),
       },
       location: {
-        x: getRandomNumber(LOCATION_X_MIN_NUMBER, LOCATION_X_MAX_NUMBER),
-        y: getRandomNumber(LOCATION_Y_MIN_NUMBER, LOCATION_Y_MAX_NUMBER)
+        x: window.utils.getRandomNumber(LOCATION_X_MIN_NUMBER, LOCATION_X_MAX_NUMBER),
+        y: window.utils.getRandomNumber(LOCATION_Y_MIN_NUMBER, LOCATION_Y_MAX_NUMBER)
       }
     };
   };
