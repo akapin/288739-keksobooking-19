@@ -26,6 +26,22 @@
   //   map.insertBefore(offerCard, mapFiltersContainer);
   // };
 
+  var successHandler = function (data) {
+    renderOfferPins(data);
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
   var activatePage = function () {
     mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
@@ -38,8 +54,7 @@
       adFormFieldsets[j].disabled = false;
     }
     window.form.roomCapacityCustomValidation();
-    var offers = window.data.generateOffers();
-    renderOfferPins(offers);
+    window.backend.load(successHandler, errorHandler);
     // renderOfferCard(offers);
   };
 
