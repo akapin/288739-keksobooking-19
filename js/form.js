@@ -11,6 +11,7 @@
   var mapMainPin = map.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
+  var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var adFormAddressField = adForm.querySelector('input[id=address]');
   var roomNumberSelect = adForm.querySelector('select[id=room_number]');
   var capacitySelect = adForm.querySelector('select[id=capacity]');
@@ -61,7 +62,8 @@
     }
   };
 
-  var disableAdForm = function () {
+  var deactivateAdForm = function () {
+    adForm.classList.add('ad-form--disabled');
     for (var j = 0; j < adFormFieldsets.length; j++) {
       adFormFieldsets[j].disabled = true;
     }
@@ -70,13 +72,49 @@
   var initAdForm = function () {
     roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
     capacitySelect.addEventListener('change', roomCapacityCustomValidation);
-    disableAdForm();
     fillInitialAddressValue();
   };
 
+  var activateAdForm = function () {
+    fillActivePageAddressValue();
+    adForm.classList.remove('ad-form--disabled');
+    for (var j = 0; j < adFormFieldsets.length; j++) {
+      adFormFieldsets[j].disabled = false;
+    }
+    roomCapacityCustomValidation();
+  };
+
+  var resetAdForm = function () {
+    adForm.reset();
+  };
+
+  var successHandler = function () {
+    window.map.showMessage('success');
+    window.map.deactivatePage();
+    resetAdForm();
+    initAdForm();
+  };
+
+  var errorHandler = function () {
+    window.map.showMessage('error');
+  };
+
+  var onAdFormSubmit = function (evt) {
+    var data = new FormData(adForm);
+    evt.preventDefault();
+    window.backend.save(data, successHandler, errorHandler);
+  };
+
+  var onResetButtonClick = function () {
+    resetAdForm();
+  };
+
+  adForm.addEventListener('submit', onAdFormSubmit);
+  adFormResetButton.addEventListener('click', onResetButtonClick);
+
   window.form = {
     init: initAdForm,
-    fillActivePageAddressValue: fillActivePageAddressValue,
-    roomCapacityCustomValidation: roomCapacityCustomValidation
+    activate: activateAdForm,
+    deactivate: deactivateAdForm
   };
 })();
