@@ -1,24 +1,43 @@
 'use strict';
 
 (function () {
+  var URL = 'https://js.dump.academy/keksobooking/data';
   var ENTER_KEY = 'Enter';
   var ESCAPE_KEY = 'Escape';
   var MOUSE_BUTTON_LEFT_CODE = 0;
+  var OFFERS_MAX_NUMBER = 5;
 
   var mainBlock = document.querySelector('main');
   var map = document.querySelector('.map');
   var mapMainPin = map.querySelector('.map__pin--main');
   var mapPinsBlock = map.querySelector('.map__pins');
   var mapFiltersBlock = map.querySelector('.map__filters');
+  var houseTypeFilter = mapFiltersBlock.querySelector('#housing-type');
   var mapFilters = mapFiltersBlock.children;
+  var offers = [];
 
-  var renderOfferPins = function (offers) {
+  var renderOfferPins = function (data) {
+    resetMapPins();
+    var offersAmount = data.length > OFFERS_MAX_NUMBER ? OFFERS_MAX_NUMBER : data.length;
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < offers.length; i++) {
-      fragment.appendChild(window.pin.generate(offers[i]));
+    for (var i = 0; i < offersAmount; i++) {
+      fragment.appendChild(window.pin.generate(data[i]));
     }
     mapPinsBlock.appendChild(fragment);
   };
+
+  var updateOffers = function () {
+    var houseTypeFilterValue = houseTypeFilter.options[houseTypeFilter.selectedIndex].value;
+    if (houseTypeFilterValue === 'any') {
+      renderOfferPins(offers);
+    } else {
+      renderOfferPins(offers.filter(function (item) {
+        return item.offer.type === houseTypeFilterValue;
+      }));
+    }
+  };
+
+  var onHouseTypeFilterChange = window.debounce(updateOffers);
 
   // var renderOfferCard = function (offers) {
   //   var mapFiltersContainer = map.querySelector('.map__filters-container');
@@ -59,7 +78,9 @@
   };
 
   var successHandler = function (data) {
-    renderOfferPins(data);
+    offers = data;
+    renderOfferPins(offers);
+    activateFiltersForm();
   };
 
   var errorHandler = function (errorMessage) {
@@ -76,7 +97,7 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  var clearOtherUsersMapPins = function () {
+  var resetMapPins = function () {
     var mapPins = mapPinsBlock.querySelectorAll('.map__pin');
     for (var i = 0; i < mapPins.length; i++) {
       var mapPin = mapPins[i];
@@ -89,13 +110,15 @@
   var activateMap = function () {
     mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
+    houseTypeFilter.addEventListener('change', onHouseTypeFilterChange);
     map.classList.remove('map--faded');
   };
 
   var deactivateMap = function () {
-    clearOtherUsersMapPins();
+    resetMapPins();
     mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
+    houseTypeFilter.removeEventListener('change', onHouseTypeFilterChange);
     map.classList.add('map--faded');
   };
 
@@ -118,9 +141,8 @@
 
   var activatePage = function () {
     activateMap();
-    activateFiltersForm();
     window.form.activate();
-    window.backend.load(successHandler, errorHandler);
+    window.backend.load(URL, successHandler, errorHandler);
     // renderOfferCard(offers);
   };
 

@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var URL = 'https://js.dump.academy/keksobooking';
   var INACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
   var INACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT = 32.5;
   var ACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
@@ -102,7 +103,7 @@
   var onAdFormSubmit = function (evt) {
     var data = new FormData(adForm);
     evt.preventDefault();
-    window.backend.save(data, successHandler, errorHandler);
+    window.backend.save(URL, data, successHandler, errorHandler);
   };
 
   var onResetButtonClick = function () {
