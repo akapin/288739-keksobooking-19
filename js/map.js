@@ -20,8 +20,23 @@
     resetMapPins();
     var offersAmount = data.length > OFFERS_MAX_NUMBER ? OFFERS_MAX_NUMBER : data.length;
     var fragment = document.createDocumentFragment();
+
+    var addOfferPinListeners = function (offerPin, offerObj) {
+      offerPin.addEventListener('click', function () {
+        window.card.render(offerPin, offerObj);
+      });
+      offerPin.addEventListener('keydown', function (evt) {
+        if (evt.key === ENTER_KEY) {
+          window.card.render(offerPin, offerObj);
+        }
+      });
+    };
+
     for (var i = 0; i < offersAmount; i++) {
-      fragment.appendChild(window.pin.generate(data[i]));
+      var offerObj = data[i];
+      var offerPin = window.pin.generate(offerObj);
+      addOfferPinListeners(offerPin, offerObj);
+      fragment.appendChild(offerPin);
     }
     mapPinsBlock.appendChild(fragment);
   };
@@ -37,13 +52,10 @@
     }
   };
 
-  var onHouseTypeFilterChange = window.debounce(updateOffers);
-
-  // var renderOfferCard = function (offers) {
-  //   var mapFiltersContainer = map.querySelector('.map__filters-container');
-  //   var offerCard = window.card.generate(offers[0]);
-  //   map.insertBefore(offerCard, mapFiltersContainer);
-  // };
+  var onHouseTypeFilterChange = window.debounce(function () {
+    window.card.close();
+    updateOffers();
+  });
 
   var onPageClick = function () {
     hideMessage();
@@ -52,6 +64,7 @@
   var onPageKeydown = function (evt) {
     if (evt.key === ESCAPE_KEY) {
       hideMessage();
+      window.card.close();
     }
   };
 
@@ -62,9 +75,7 @@
     var messageElement = messageTemplate.cloneNode(true);
 
     mainBlock.appendChild(messageElement);
-
     document.addEventListener('click', onPageClick);
-    document.addEventListener('keydown', onPageKeydown);
   };
 
   var hideMessage = function () {
@@ -74,7 +85,6 @@
     }
 
     document.removeEventListener('click', onPageClick);
-    document.removeEventListener('keydown', onPageKeydown);
   };
 
   var successHandler = function (data) {
@@ -107,6 +117,18 @@
     }
   };
 
+  var activateMapPin = function (offerPin) {
+    deactivateMapPin();
+    offerPin.classList.add('map__pin--active');
+  };
+
+  var deactivateMapPin = function () {
+    var activeMapPin = mapPinsBlock.querySelector('.map__pin--active');
+    if (activeMapPin) {
+      activeMapPin.classList.remove('map__pin--active');
+    }
+  };
+
   var activateMap = function () {
     mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
@@ -135,6 +157,7 @@
   };
 
   var initPage = function () {
+    document.addEventListener('keydown', onPageKeydown);
     deactivatePage();
     window.form.init();
   };
@@ -143,7 +166,6 @@
     activateMap();
     window.form.activate();
     window.backend.load(URL, successHandler, errorHandler);
-    // renderOfferCard(offers);
   };
 
   var deactivatePage = function () {
@@ -168,6 +190,8 @@
 
   window.map = {
     deactivatePage: deactivatePage,
-    showMessage: showMessage
+    showMessage: showMessage,
+    activatePin: activateMapPin,
+    deactivatePin: deactivateMapPin,
   };
 })();

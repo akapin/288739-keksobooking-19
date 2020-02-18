@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var map = document.querySelector('.map');
+
   var generateOfferPhotoList = function (cardElement, photos) {
     var cardPhotosBlock = cardElement.querySelector('.popup__photos');
     var photoTemplate = cardPhotosBlock.querySelector('.popup__photo');
@@ -49,7 +51,30 @@
     return cardElement;
   };
 
+  var closeOpenedCard = function () {
+    var openedCard = map.querySelector('.popup');
+    if (openedCard) {
+      openedCard.parentNode.removeChild(openedCard);
+    }
+    window.map.deactivatePin();
+  };
+
+  var onPopupCloseButtonClick = function () {
+    closeOpenedCard();
+  };
+
+  var renderOfferCard = function (offerPin, offerObj) {
+    var mapFiltersContainer = map.querySelector('.map__filters-container');
+    var offerCard = generateOfferCard(offerObj);
+    var popupCloseButton = offerCard.querySelector('.popup__close');
+    closeOpenedCard();
+    popupCloseButton.addEventListener('click', onPopupCloseButtonClick);
+    map.insertBefore(offerCard, mapFiltersContainer);
+    window.map.activatePin(offerPin);
+  };
+
   window.card = {
-    generate: generateOfferCard
+    render: renderOfferCard,
+    close: closeOpenedCard,
   };
 })();
