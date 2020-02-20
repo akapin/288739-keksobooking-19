@@ -11,9 +11,9 @@
   var map = document.querySelector('.map');
   var mapMainPin = map.querySelector('.map__pin--main');
   var mapPinsBlock = map.querySelector('.map__pins');
-  var mapFiltersBlock = map.querySelector('.map__filters');
-  var houseTypeFilter = mapFiltersBlock.querySelector('#housing-type');
-  var mapFilters = mapFiltersBlock.children;
+  var mapFiltersForm = map.querySelector('.map__filters');
+  var houseTypeFilter = mapFiltersForm.querySelector('#housing-type');
+  var mapFilters = mapFiltersForm.children;
   var offers = [];
 
   var renderOfferPins = function (data) {
@@ -117,6 +117,11 @@
     }
   };
 
+  var resetMainPinLocation = function () {
+    mapMainPin.style.left = '570px';
+    mapMainPin.style.top = '375px';
+  };
+
   var activateMapPin = function (offerPin) {
     deactivateMapPin();
     offerPin.classList.add('map__pin--active');
@@ -129,6 +134,14 @@
     }
   };
 
+  var initMap = function () {
+    deactivateFiltersForm();
+    mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
+    mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
+    houseTypeFilter.removeEventListener('change', onHouseTypeFilterChange);
+    map.classList.add('map--faded');
+  };
+
   var activateMap = function () {
     mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
@@ -138,10 +151,13 @@
 
   var deactivateMap = function () {
     resetMapPins();
-    mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
-    mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
-    houseTypeFilter.removeEventListener('change', onHouseTypeFilterChange);
-    map.classList.add('map--faded');
+    resetMainPinLocation();
+    window.card.close();
+    initMap();
+  };
+
+  var resetFiltersForm = function () {
+    mapFiltersForm.reset();
   };
 
   var activateFiltersForm = function () {
@@ -151,6 +167,7 @@
   };
 
   var deactivateFiltersForm = function () {
+    resetFiltersForm();
     for (var i = 0; i < mapFilters.length; i++) {
       mapFilters[i].disabled = true;
     }
@@ -158,7 +175,7 @@
 
   var initPage = function () {
     document.addEventListener('keydown', onPageKeydown);
-    deactivatePage();
+    initMap();
     window.form.init();
   };
 
@@ -170,8 +187,7 @@
 
   var deactivatePage = function () {
     deactivateMap();
-    deactivateFiltersForm();
-    window.form.deactivate();
+    window.form.init();
   };
 
   var onMapMainPinMousedown = function (evt) {
@@ -192,6 +208,6 @@
     deactivatePage: deactivatePage,
     showMessage: showMessage,
     activatePin: activateMapPin,
-    deactivatePin: deactivateMapPin,
+    deactivatePin: deactivateMapPin
   };
 })();

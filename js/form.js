@@ -64,6 +64,7 @@
   };
 
   var deactivateAdForm = function () {
+    resetAdForm();
     adForm.classList.add('ad-form--disabled');
     for (var j = 0; j < adFormFieldsets.length; j++) {
       adFormFieldsets[j].disabled = true;
@@ -71,6 +72,7 @@
   };
 
   var initAdForm = function () {
+    deactivateAdForm();
     roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
     capacitySelect.addEventListener('change', roomCapacityCustomValidation);
     fillInitialAddressValue();
@@ -92,8 +94,6 @@
   var successHandler = function () {
     window.map.showMessage('success');
     window.map.deactivatePage();
-    resetAdForm();
-    initAdForm();
   };
 
   var errorHandler = function () {
@@ -107,7 +107,7 @@
   };
 
   var onResetButtonClick = function () {
-    resetAdForm();
+    window.map.deactivatePage();
   };
 
   adForm.addEventListener('submit', onAdFormSubmit);
@@ -115,7 +115,6 @@
 
   window.form = {
     init: initAdForm,
-    activate: activateAdForm,
-    deactivate: deactivateAdForm
+    activate: activateAdForm
   };
 })();
