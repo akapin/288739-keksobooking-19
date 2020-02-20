@@ -43,13 +43,13 @@
 
   var updateOffers = function () {
     var houseTypeFilterValue = houseTypeFilter.options[houseTypeFilter.selectedIndex].value;
-    if (houseTypeFilterValue === 'any') {
-      renderOfferPins(offers);
-    } else {
-      renderOfferPins(offers.filter(function (item) {
+    var filteredOffers = offers;
+    if (houseTypeFilterValue !== 'any') {
+      filteredOffers = offers.filter(function (item) {
         return item.offer.type === houseTypeFilterValue;
-      }));
+      });
     }
+    renderOfferPins(filteredOffers);
   };
 
   var onHouseTypeFilterChange = window.debounce(function () {
