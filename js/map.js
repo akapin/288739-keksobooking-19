@@ -1,30 +1,61 @@
 'use strict';
 
 (function () {
+  var URL = 'https://js.dump.academy/keksobooking/data';
   var ENTER_KEY = 'Enter';
   var ESCAPE_KEY = 'Escape';
   var MOUSE_BUTTON_LEFT_CODE = 0;
+  var OFFERS_MAX_NUMBER = 5;
 
   var mainBlock = document.querySelector('main');
   var map = document.querySelector('.map');
   var mapMainPin = map.querySelector('.map__pin--main');
   var mapPinsBlock = map.querySelector('.map__pins');
-  var mapFiltersBlock = map.querySelector('.map__filters');
-  var mapFilters = mapFiltersBlock.children;
+  var mapFiltersForm = map.querySelector('.map__filters');
+  var houseTypeFilter = mapFiltersForm.querySelector('#housing-type');
+  var mapFilters = mapFiltersForm.children;
+  var offers = [];
 
-  var renderOfferPins = function (offers) {
+  var renderOfferPins = function (data) {
+    resetMapPins();
+    var offersAmount = data.length > OFFERS_MAX_NUMBER ? OFFERS_MAX_NUMBER : data.length;
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < offers.length; i++) {
-      fragment.appendChild(window.pin.generate(offers[i]));
+
+    var addOfferPinListeners = function (offerPin, offerObj) {
+      offerPin.addEventListener('click', function () {
+        window.card.render(offerPin, offerObj);
+      });
+      offerPin.addEventListener('keydown', function (evt) {
+        if (evt.key === ENTER_KEY) {
+          window.card.render(offerPin, offerObj);
+        }
+      });
+    };
+
+    for (var i = 0; i < offersAmount; i++) {
+      var offerObj = data[i];
+      var offerPin = window.pin.generate(offerObj);
+      addOfferPinListeners(offerPin, offerObj);
+      fragment.appendChild(offerPin);
     }
     mapPinsBlock.appendChild(fragment);
   };
 
-  // var renderOfferCard = function (offers) {
-  //   var mapFiltersContainer = map.querySelector('.map__filters-container');
-  //   var offerCard = window.card.generate(offers[0]);
-  //   map.insertBefore(offerCard, mapFiltersContainer);
-  // };
+  var updateOffers = function () {
+    var houseTypeFilterValue = houseTypeFilter.options[houseTypeFilter.selectedIndex].value;
+    var filteredOffers = offers;
+    if (houseTypeFilterValue !== 'any') {
+      filteredOffers = offers.filter(function (item) {
+        return item.offer.type === houseTypeFilterValue;
+      });
+    }
+    renderOfferPins(filteredOffers);
+  };
+
+  var onHouseTypeFilterChange = window.debounce(function () {
+    window.card.close();
+    updateOffers();
+  });
 
   var onPageClick = function () {
     hideMessage();
@@ -33,6 +64,7 @@
   var onPageKeydown = function (evt) {
     if (evt.key === ESCAPE_KEY) {
       hideMessage();
+      window.card.close();
     }
   };
 
@@ -43,9 +75,7 @@
     var messageElement = messageTemplate.cloneNode(true);
 
     mainBlock.appendChild(messageElement);
-
     document.addEventListener('click', onPageClick);
-    document.addEventListener('keydown', onPageKeydown);
   };
 
   var hideMessage = function () {
@@ -55,11 +85,12 @@
     }
 
     document.removeEventListener('click', onPageClick);
-    document.removeEventListener('keydown', onPageKeydown);
   };
 
   var successHandler = function (data) {
-    renderOfferPins(data);
+    offers = data;
+    renderOfferPins(offers);
+    activateFiltersForm();
   };
 
   var errorHandler = function (errorMessage) {
@@ -76,7 +107,7 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  var clearOtherUsersMapPins = function () {
+  var resetMapPins = function () {
     var mapPins = mapPinsBlock.querySelectorAll('.map__pin');
     for (var i = 0; i < mapPins.length; i++) {
       var mapPin = mapPins[i];
@@ -86,17 +117,47 @@
     }
   };
 
+  var resetMainPinLocation = function () {
+    mapMainPin.style.left = '570px';
+    mapMainPin.style.top = '375px';
+  };
+
+  var activateMapPin = function (offerPin) {
+    deactivateMapPin();
+    offerPin.classList.add('map__pin--active');
+  };
+
+  var deactivateMapPin = function () {
+    var activeMapPin = mapPinsBlock.querySelector('.map__pin--active');
+    if (activeMapPin) {
+      activeMapPin.classList.remove('map__pin--active');
+    }
+  };
+
+  var initMap = function () {
+    deactivateFiltersForm();
+    mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
+    mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
+    houseTypeFilter.removeEventListener('change', onHouseTypeFilterChange);
+    map.classList.add('map--faded');
+  };
+
   var activateMap = function () {
     mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
+    houseTypeFilter.addEventListener('change', onHouseTypeFilterChange);
     map.classList.remove('map--faded');
   };
 
   var deactivateMap = function () {
-    clearOtherUsersMapPins();
-    mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
-    mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
-    map.classList.add('map--faded');
+    resetMapPins();
+    resetMainPinLocation();
+    window.card.close();
+    initMap();
+  };
+
+  var resetFiltersForm = function () {
+    mapFiltersForm.reset();
   };
 
   var activateFiltersForm = function () {
@@ -106,28 +167,27 @@
   };
 
   var deactivateFiltersForm = function () {
+    resetFiltersForm();
     for (var i = 0; i < mapFilters.length; i++) {
       mapFilters[i].disabled = true;
     }
   };
 
   var initPage = function () {
-    deactivatePage();
+    document.addEventListener('keydown', onPageKeydown);
+    initMap();
     window.form.init();
   };
 
   var activatePage = function () {
     activateMap();
-    activateFiltersForm();
     window.form.activate();
-    window.backend.load(successHandler, errorHandler);
-    // renderOfferCard(offers);
+    window.backend.load(URL, successHandler, errorHandler);
   };
 
   var deactivatePage = function () {
     deactivateMap();
-    deactivateFiltersForm();
-    window.form.deactivate();
+    window.form.init();
   };
 
   var onMapMainPinMousedown = function (evt) {
@@ -146,6 +206,8 @@
 
   window.map = {
     deactivatePage: deactivatePage,
-    showMessage: showMessage
+    showMessage: showMessage,
+    activatePin: activateMapPin,
+    deactivatePin: deactivateMapPin
   };
 })();

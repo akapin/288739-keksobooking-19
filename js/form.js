@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var URL = 'https://js.dump.academy/keksobooking';
   var INACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
   var INACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT = 32.5;
   var ACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
@@ -63,6 +64,7 @@
   };
 
   var deactivateAdForm = function () {
+    resetAdForm();
     adForm.classList.add('ad-form--disabled');
     for (var j = 0; j < adFormFieldsets.length; j++) {
       adFormFieldsets[j].disabled = true;
@@ -70,6 +72,7 @@
   };
 
   var initAdForm = function () {
+    deactivateAdForm();
     roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
     capacitySelect.addEventListener('change', roomCapacityCustomValidation);
     fillInitialAddressValue();
@@ -91,8 +94,6 @@
   var successHandler = function () {
     window.map.showMessage('success');
     window.map.deactivatePage();
-    resetAdForm();
-    initAdForm();
   };
 
   var errorHandler = function () {
@@ -102,11 +103,11 @@
   var onAdFormSubmit = function (evt) {
     var data = new FormData(adForm);
     evt.preventDefault();
-    window.backend.save(data, successHandler, errorHandler);
+    window.backend.save(URL, data, successHandler, errorHandler);
   };
 
   var onResetButtonClick = function () {
-    resetAdForm();
+    window.map.deactivatePage();
   };
 
   adForm.addEventListener('submit', onAdFormSubmit);
@@ -114,7 +115,6 @@
 
   window.form = {
     init: initAdForm,
-    activate: activateAdForm,
-    deactivate: deactivateAdForm
+    activate: activateAdForm
   };
 })();
