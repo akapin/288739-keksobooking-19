@@ -16,6 +16,10 @@
   var adFormAddressField = adForm.querySelector('input[id=address]');
   var roomNumberSelect = adForm.querySelector('select[id=room_number]');
   var capacitySelect = adForm.querySelector('select[id=capacity]');
+  var adFormTypeSelect = adForm.querySelector('select[id=type]');
+  var adFormPriceInput = adForm.querySelector('input[id=price]');
+  var adFormTimeinSelect = adForm.querySelector('select[id=timein]');
+  var adFormTimeoutSelect = adForm.querySelector('select[id=timeout]');
 
   var fillInitialAddressValue = function () {
     var addressX = Math.round(parseInt(mapMainPin.style.left, 10) + INACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT);
@@ -110,8 +114,32 @@
     window.map.deactivatePage();
   };
 
+  var onAdFormTypeSelectChange = function () {
+    var typeSelectMap = {
+      'bungalo': 0,
+      'flat': 1000,
+      'house': 5000,
+      'palace': 10000,
+    };
+    var minPrice = typeSelectMap[adFormTypeSelect.value];
+
+    adFormPriceInput.min = minPrice;
+    adFormPriceInput.placeholder = minPrice;
+  };
+
+  var onAdFormTimeinSelectChange = function () {
+    adFormTimeoutSelect.value = adFormTimeinSelect.value;
+  };
+
+  var onAdFormTimeoutSelectChange = function () {
+    adFormTimeinSelect.value = adFormTimeoutSelect.value;
+  };
+
   adForm.addEventListener('submit', onAdFormSubmit);
   adFormResetButton.addEventListener('click', onResetButtonClick);
+  adFormTypeSelect.addEventListener('change', onAdFormTypeSelectChange);
+  adFormTimeinSelect.addEventListener('change', onAdFormTimeinSelectChange);
+  adFormTimeoutSelect.addEventListener('change', onAdFormTimeoutSelectChange);
 
   window.form = {
     init: initAdForm,
