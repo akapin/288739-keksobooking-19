@@ -2,44 +2,20 @@
 
 (function () {
   var URL = 'https://js.dump.academy/keksobooking/data';
-  var ENTER_KEY = 'Enter';
   var ESCAPE_KEY = 'Escape';
-  var MOUSE_BUTTON_LEFT_CODE = 0;
-  var OFFERS_MAX_NUMBER = 5;
+  var mapConstraint = {
+    LEFT: 0,
+    RIGHT: 1200,
+    TOP: 130,
+    BOTTOM: 630,
+  };
 
   var mainBlock = document.querySelector('main');
   var map = document.querySelector('.map');
-  var mapMainPin = map.querySelector('.map__pin--main');
-  var mapPinsBlock = map.querySelector('.map__pins');
   var mapFiltersForm = map.querySelector('.map__filters');
   var houseTypeFilter = mapFiltersForm.querySelector('#housing-type');
   var mapFilters = mapFiltersForm.children;
   var offers = [];
-
-  var renderOfferPins = function (data) {
-    resetMapPins();
-    var offersAmount = data.length > OFFERS_MAX_NUMBER ? OFFERS_MAX_NUMBER : data.length;
-    var fragment = document.createDocumentFragment();
-
-    var addOfferPinListeners = function (offerPin, offerObj) {
-      offerPin.addEventListener('click', function () {
-        window.card.render(offerPin, offerObj);
-      });
-      offerPin.addEventListener('keydown', function (evt) {
-        if (evt.key === ENTER_KEY) {
-          window.card.render(offerPin, offerObj);
-        }
-      });
-    };
-
-    for (var i = 0; i < offersAmount; i++) {
-      var offerObj = data[i];
-      var offerPin = window.pin.generate(offerObj);
-      addOfferPinListeners(offerPin, offerObj);
-      fragment.appendChild(offerPin);
-    }
-    mapPinsBlock.appendChild(fragment);
-  };
 
   var updateOffers = function () {
     var houseTypeFilterValue = houseTypeFilter.options[houseTypeFilter.selectedIndex].value;
@@ -49,7 +25,7 @@
         return item.offer.type === houseTypeFilterValue;
       });
     }
-    renderOfferPins(filteredOffers);
+    window.pin.render(filteredOffers);
   };
 
   var onHouseTypeFilterChange = window.debounce(function () {
@@ -89,7 +65,7 @@
 
   var successHandler = function (data) {
     offers = data;
-    renderOfferPins(offers);
+    window.pin.render(offers);
     activateFiltersForm();
   };
 
@@ -107,51 +83,22 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  var resetMapPins = function () {
-    var mapPins = mapPinsBlock.querySelectorAll('.map__pin');
-    for (var i = 0; i < mapPins.length; i++) {
-      var mapPin = mapPins[i];
-      if (!mapPin.classList.contains('map__pin--main')) {
-        mapPin.parentNode.removeChild(mapPin);
-      }
-    }
-  };
-
-  var resetMainPinLocation = function () {
-    mapMainPin.style.left = '570px';
-    mapMainPin.style.top = '375px';
-  };
-
-  var activateMapPin = function (offerPin) {
-    deactivateMapPin();
-    offerPin.classList.add('map__pin--active');
-  };
-
-  var deactivateMapPin = function () {
-    var activeMapPin = mapPinsBlock.querySelector('.map__pin--active');
-    if (activeMapPin) {
-      activeMapPin.classList.remove('map__pin--active');
-    }
-  };
-
   var initMap = function () {
     deactivateFiltersForm();
-    mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
-    mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
+    window.pin.addHandlers();
     houseTypeFilter.removeEventListener('change', onHouseTypeFilterChange);
     map.classList.add('map--faded');
   };
 
   var activateMap = function () {
-    mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
-    mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
+    window.pin.removeHandlers();
     houseTypeFilter.addEventListener('change', onHouseTypeFilterChange);
     map.classList.remove('map--faded');
   };
 
   var deactivateMap = function () {
-    resetMapPins();
-    resetMainPinLocation();
+    window.pin.reset();
+    window.pin.resetMainLocation();
     window.card.close();
     initMap();
   };
@@ -190,24 +137,12 @@
     window.form.init();
   };
 
-  var onMapMainPinMousedown = function (evt) {
-    if (evt.button === MOUSE_BUTTON_LEFT_CODE) {
-      activatePage();
-    }
-  };
-
-  var onMapMainPinKeydown = function (evt) {
-    if (evt.key === ENTER_KEY) {
-      activatePage();
-    }
-  };
-
   initPage();
 
   window.map = {
+    activatePage: activatePage,
     deactivatePage: deactivatePage,
     showMessage: showMessage,
-    activatePin: activateMapPin,
-    deactivatePin: deactivateMapPin
+    constraint: mapConstraint
   };
 })();
