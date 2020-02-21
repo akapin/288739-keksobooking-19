@@ -56,7 +56,7 @@
     if (openedCard) {
       openedCard.parentNode.removeChild(openedCard);
     }
-    window.map.deactivatePin();
+    window.pin.deactivate();
   };
 
   var onPopupCloseButtonClick = function () {
@@ -70,7 +70,7 @@
     closeOpenedCard();
     popupCloseButton.addEventListener('click', onPopupCloseButtonClick);
     map.insertBefore(offerCard, mapFiltersContainer);
-    window.map.activatePin(offerPin);
+    window.pin.activate(offerPin);
   };
 
   window.card = {

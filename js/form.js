@@ -2,10 +2,6 @@
 
 (function () {
   var URL = 'https://js.dump.academy/keksobooking';
-  var INACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
-  var INACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT = 32.5;
-  var ACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT = 32.5;
-  var ACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT = 87;
   var ROOM_CAPACITY_INVALID_CHOICE_TEXT = 'Выбранное количество комнат не соответствует выбранному количеству гостей';
 
   var map = document.querySelector('.map');
@@ -22,14 +18,14 @@
   var adFormTimeoutSelect = adForm.querySelector('select[id=timeout]');
 
   var fillInitialAddressValue = function () {
-    var addressX = Math.round(parseInt(mapMainPin.style.left, 10) + INACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT);
-    var addressY = Math.round(parseInt(mapMainPin.style.top, 10) + INACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT);
+    var addressX = Math.round(parseInt(mapMainPin.style.left, 10) + window.pin.inactivePageMainLocationShift.X);
+    var addressY = Math.round(parseInt(mapMainPin.style.top, 10) + window.pin.inactivePageMainLocationShift.Y);
     adFormAddressField.value = addressX + ', ' + addressY;
   };
 
   var fillActivePageAddressValue = function () {
-    var addressX = Math.round(parseInt(mapMainPin.style.left, 10) + ACTIVE_PAGE_MAIN_PIN_LOCATION_X_SHIFT);
-    var addressY = Math.round(parseInt(mapMainPin.style.top, 10) + ACTIVE_PAGE_MAIN_PIN_LOCATION_Y_SHIFT);
+    var addressX = Math.round(parseInt(mapMainPin.style.left, 10) + window.pin.activePageMainLocationShift.X);
+    var addressY = Math.round(parseInt(mapMainPin.style.top, 10) + window.pin.activePageMainLocationShift.Y);
     adFormAddressField.value = addressX + ', ' + addressY;
   };
 
@@ -143,6 +139,7 @@
 
   window.form = {
     init: initAdForm,
-    activate: activateAdForm
+    activate: activateAdForm,
+    fillActivePageAddressValue: fillActivePageAddressValue
   };
 })();
