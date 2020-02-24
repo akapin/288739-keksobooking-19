@@ -88,22 +88,22 @@
 
   var onMapMainPinMousedown = function (evt) {
     if (evt.button === MOUSE_BUTTON_LEFT_CODE) {
-      window.map.activatePage();
+      window.page.activate();
     }
   };
 
   var onMapMainPinKeydown = function (evt) {
     if (evt.key === ENTER_KEY) {
-      window.map.activatePage();
+      window.page.activate();
     }
   };
 
-  var addMainPinHandlers = function () {
+  var addMainPinEventListeners = function () {
     mapMainPin.addEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.addEventListener('keydown', onMapMainPinKeydown);
   };
 
-  var removeMainPinHandlers = function () {
+  var removeMainPinEventListeners = function () {
     mapMainPin.removeEventListener('mousedown', onMapMainPinMousedown);
     mapMainPin.removeEventListener('keydown', onMapMainPinKeydown);
   };
@@ -114,8 +114,8 @@
     reset: resetMapPins,
     activate: activateMapPin,
     deactivate: deactivateMapPin,
-    addHandlers: addMainPinHandlers,
-    removeHandlers: removeMainPinHandlers,
+    addEventListeners: addMainPinEventListeners,
+    removeEventListeners: removeMainPinEventListeners,
     activePageMainLocationShift: activePageMainPinLocationShift,
     inactivePageMainLocationShift: inactivePageMainPinLocationShift,
   };
