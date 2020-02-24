@@ -78,8 +78,31 @@
     }
   };
 
+  var addAdFormEventListeners = function () {
+    adForm.addEventListener('submit', onAdFormSubmit);
+    adFormResetButton.addEventListener('click', onResetButtonClick);
+    adFormTypeSelect.addEventListener('change', onAdFormTypeSelectChange);
+    adFormTimeinSelect.addEventListener('change', onAdFormTimeinSelectChange);
+    adFormTimeoutSelect.addEventListener('change', onAdFormTimeoutSelectChange);
+    roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
+    capacitySelect.addEventListener('change', roomCapacityCustomValidation);
+    adFormPriceInput.addEventListener('change', priceCustomValidation);
+  };
+
+  var removeAdFormEventListeners = function () {
+    adForm.removeEventListener('submit', onAdFormSubmit);
+    adFormResetButton.removeEventListener('click', onResetButtonClick);
+    adFormTypeSelect.removeEventListener('change', onAdFormTypeSelectChange);
+    adFormTimeinSelect.removeEventListener('change', onAdFormTimeinSelectChange);
+    adFormTimeoutSelect.removeEventListener('change', onAdFormTimeoutSelectChange);
+    roomNumberSelect.removeEventListener('change', roomCapacityCustomValidation);
+    capacitySelect.removeEventListener('change', roomCapacityCustomValidation);
+    adFormPriceInput.removeEventListener('change', priceCustomValidation);
+  };
+
   var deactivateAdForm = function () {
     resetAdForm();
+    removeAdFormEventListeners();
     adForm.classList.add('ad-form--disabled');
     for (var j = 0; j < adFormFieldsets.length; j++) {
       adFormFieldsets[j].disabled = true;
@@ -88,14 +111,12 @@
 
   var initAdForm = function () {
     deactivateAdForm();
-    roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
-    capacitySelect.addEventListener('change', roomCapacityCustomValidation);
-    adFormPriceInput.addEventListener('change', priceCustomValidation);
     fillInitialAddressValue();
   };
 
   var activateAdForm = function () {
     fillActivePageAddressValue();
+    addAdFormEventListeners();
     adForm.classList.remove('ad-form--disabled');
     for (var j = 0; j < adFormFieldsets.length; j++) {
       adFormFieldsets[j].disabled = false;
@@ -150,12 +171,6 @@
   var onAdFormTimeoutSelectChange = function () {
     adFormTimeinSelect.value = adFormTimeoutSelect.value;
   };
-
-  adForm.addEventListener('submit', onAdFormSubmit);
-  adFormResetButton.addEventListener('click', onResetButtonClick);
-  adFormTypeSelect.addEventListener('change', onAdFormTypeSelectChange);
-  adFormTimeinSelect.addEventListener('change', onAdFormTimeinSelectChange);
-  adFormTimeoutSelect.addEventListener('change', onAdFormTimeoutSelectChange);
 
   window.form = {
     init: initAdForm,
