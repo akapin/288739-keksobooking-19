@@ -2,7 +2,7 @@
 
 (function () {
   var ESCAPE_KEY = 'Escape';
-  var mainBlock = document.querySelector('main');
+  var mainBlockElement = document.querySelector('main');
 
   var onPageKeydown = function (evt) {
     if (evt.key === ESCAPE_KEY) {
@@ -18,20 +18,20 @@
   };
 
   var showMessage = function (type) {
-    var messageTemplate = document.querySelector('#' + type)
+    var messageTemplateElement = document.querySelector('#' + type)
       .content
       .querySelector('.' + type);
-    var messageElement = messageTemplate.cloneNode(true);
+    var messageElement = messageTemplateElement.cloneNode(true);
 
-    mainBlock.appendChild(messageElement);
+    mainBlockElement.appendChild(messageElement);
     messageElement.addEventListener('click', onPageClick);
   };
 
   var hideMessage = function () {
-    var messages = mainBlock.querySelectorAll('.success, .error');
-    for (var i = 0; i < messages.length; i++) {
-      mainBlock.removeChild(messages[i]);
-      messages[i].removeEventListener('click', onPageClick);
+    var messageElements = mainBlockElement.querySelectorAll('.success, .error');
+    for (var i = 0; i < messageElements.length; i++) {
+      mainBlockElement.removeChild(messageElements[i]);
+      messageElements[i].removeEventListener('click', onPageClick);
     }
   };
 

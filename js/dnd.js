@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
-  var map = document.querySelector('.map');
-  var mapMainPin = map.querySelector('.map__pin--main');
+  var mapElement = document.querySelector('.map');
+  var mapMainPinElement = mapElement.querySelector('.map__pin--main');
 
-  mapMainPin.addEventListener('mousedown', function (evt) {
+  mapMainPinElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     var startCoords = {
@@ -28,8 +28,8 @@
         y: moveEvt.clientY
       };
 
-      var newXCoord = (mapMainPin.offsetLeft - shift.x) + window.pin.activePageMainLocationShift.X;
-      var newYCoord = (mapMainPin.offsetTop - shift.y) + window.pin.activePageMainLocationShift.Y;
+      var newXCoord = (mapMainPinElement.offsetLeft - shift.x) + window.pin.activePageMainLocationShift.X;
+      var newYCoord = (mapMainPinElement.offsetTop - shift.y) + window.pin.activePageMainLocationShift.Y;
 
       if (newXCoord < window.map.constraint.LEFT) {
         newXCoord = window.map.constraint.LEFT;
@@ -47,8 +47,8 @@
         newYCoord = window.map.constraint.BOTTOM;
       }
 
-      mapMainPin.style.left = (newXCoord - window.pin.activePageMainLocationShift.X) + 'px';
-      mapMainPin.style.top = (newYCoord - window.pin.activePageMainLocationShift.Y) + 'px';
+      mapMainPinElement.style.left = (newXCoord - window.pin.activePageMainLocationShift.X) + 'px';
+      mapMainPinElement.style.top = (newYCoord - window.pin.activePageMainLocationShift.Y) + 'px';
     };
 
     var onMouseUp = function (upEvt) {
@@ -62,9 +62,9 @@
       if (dragged) {
         var onClickPreventDefault = function (clickEvt) {
           clickEvt.preventDefault();
-          mapMainPin.removeEventListener('click', onClickPreventDefault);
+          mapMainPinElement.removeEventListener('click', onClickPreventDefault);
         };
-        mapMainPin.addEventListener('click', onClickPreventDefault);
+        mapMainPinElement.addEventListener('click', onClickPreventDefault);
       }
     };
 
