@@ -11,8 +11,8 @@
   var adFormFieldsetElements = adFormElement.querySelectorAll('fieldset');
   var adFormResetButtonElement = adFormElement.querySelector('.ad-form__reset');
   var adFormAddressFieldElement = adFormElement.querySelector('input[id=address]');
-  var roomNumberSelectElement = adFormElement.querySelector('select[id=room_number]');
-  var capacitySelectElement = adFormElement.querySelector('select[id=capacity]');
+  var adFormRoomNumberSelectElement = adFormElement.querySelector('select[id=room_number]');
+  var adFormCapacitySelectElement = adFormElement.querySelector('select[id=capacity]');
   var adFormTypeSelectElement = adFormElement.querySelector('select[id=type]');
   var adFormPriceInputElement = adFormElement.querySelector('input[id=price]');
   var adFormTimeinSelectElement = adFormElement.querySelector('select[id=timein]');
@@ -30,10 +30,14 @@
     adFormAddressFieldElement.value = addressX + ', ' + addressY;
   };
 
+  var onAdFormRoomNumberSelectElementChange = roomCapacityCustomValidation;
+  var onAdFormCapacitySelectElementChange = roomCapacityCustomValidation;
+  var onAdFormPriceInputElementChange = priceCustomValidation;
+
   var roomCapacityCustomValidation = function () {
-    var capacitySelectOptionElements = capacitySelectElement.querySelectorAll('option');
-    var selectedNumberOfRooms = parseInt(roomNumberSelectElement.value, 10);
-    var selectedRoomCapacity = parseInt(capacitySelectElement.value, 10);
+    var capacitySelectOptionElements = adFormCapacitySelectElement.querySelectorAll('option');
+    var selectedNumberOfRooms = parseInt(adFormRoomNumberSelectElement.value, 10);
+    var selectedRoomCapacity = parseInt(adFormCapacitySelectElement.value, 10);
 
     var selectMap = {
       1: [1],
@@ -54,13 +58,13 @@
     }
 
     if (selectedRoomCapacity !== 0 && selectedNumberOfRooms < selectedRoomCapacity) {
-      roomNumberSelectElement.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+      adFormRoomNumberSelectElement.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
     } else if (selectedRoomCapacity === 0 && selectedNumberOfRooms !== 100) {
-      roomNumberSelectElement.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+      adFormRoomNumberSelectElement.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
     } else if (selectedNumberOfRooms === 100 && selectedRoomCapacity !== 0) {
-      roomNumberSelectElement.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
+      adFormRoomNumberSelectElement.setCustomValidity(ROOM_CAPACITY_INVALID_CHOICE_TEXT);
     } else {
-      roomNumberSelectElement.setCustomValidity('');
+      adFormRoomNumberSelectElement.setCustomValidity('');
     }
   };
 
@@ -85,9 +89,9 @@
     adFormTypeSelectElement.addEventListener('change', onAdFormTypeSelectChange);
     adFormTimeinSelectElement.addEventListener('change', onAdFormTimeinSelectChange);
     adFormTimeoutSelectElement.addEventListener('change', onAdFormTimeoutSelectChange);
-    roomNumberSelectElement.addEventListener('change', roomCapacityCustomValidation);
-    capacitySelectElement.addEventListener('change', roomCapacityCustomValidation);
-    adFormPriceInputElement.addEventListener('change', priceCustomValidation);
+    adFormRoomNumberSelectElement.addEventListener('change', onAdFormRoomNumberSelectElementChange);
+    adFormCapacitySelectElement.addEventListener('change', onAdFormCapacitySelectElementChange);
+    adFormPriceInputElement.addEventListener('change', onAdFormPriceInputElementChange);
   };
 
   var removeAdFormEventListeners = function () {
@@ -96,9 +100,9 @@
     adFormTypeSelectElement.removeEventListener('change', onAdFormTypeSelectChange);
     adFormTimeinSelectElement.removeEventListener('change', onAdFormTimeinSelectChange);
     adFormTimeoutSelectElement.removeEventListener('change', onAdFormTimeoutSelectChange);
-    roomNumberSelectElement.removeEventListener('change', roomCapacityCustomValidation);
-    capacitySelectElement.removeEventListener('change', roomCapacityCustomValidation);
-    adFormPriceInputElement.removeEventListener('change', priceCustomValidation);
+    adFormRoomNumberSelectElement.removeEventListener('change', onAdFormRoomNumberSelectElementChange);
+    adFormCapacitySelectElement.removeEventListener('change', onAdFormCapacitySelectElementChange);
+    adFormPriceInputElement.removeEventListener('change', onAdFormPriceInputElementChange);
   };
 
   var deactivateAdForm = function () {
