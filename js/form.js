@@ -92,12 +92,12 @@
   };
 
   var successHandler = function () {
-    window.map.showMessage('success');
-    window.map.deactivatePage();
+    window.page.showMessage('success');
+    window.page.deactivate();
   };
 
   var errorHandler = function () {
-    window.map.showMessage('error');
+    window.page.showMessage('error');
   };
 
   var onAdFormSubmit = function (evt) {
@@ -107,7 +107,7 @@
   };
 
   var onResetButtonClick = function () {
-    window.map.deactivatePage();
+    window.page.deactivate();
   };
 
   var onAdFormTypeSelectChange = function () {
