@@ -89,6 +89,8 @@
 
   var resetAdForm = function () {
     adForm.reset();
+    document.querySelector('.ad-form-header__preview img').src = 'img/muffin-grey.svg';
+    document.querySelector('.ad-form__photo').innerHTML = '';
   };
 
   var successHandler = function () {
