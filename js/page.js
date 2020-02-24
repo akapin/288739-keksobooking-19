@@ -11,8 +11,10 @@
     }
   };
 
-  var onPageClick = function () {
-    hideMessage();
+  var onPageClick = function (evt) {
+    if (evt.target.tagName.toLowerCase() !== 'p') {
+      hideMessage();
+    }
   };
 
   var showMessage = function (type) {
@@ -22,16 +24,15 @@
     var messageElement = messageTemplate.cloneNode(true);
 
     mainBlock.appendChild(messageElement);
-    document.addEventListener('click', onPageClick);
+    messageElement.addEventListener('click', onPageClick);
   };
 
   var hideMessage = function () {
     var messages = mainBlock.querySelectorAll('.success, .error');
     for (var i = 0; i < messages.length; i++) {
       mainBlock.removeChild(messages[i]);
+      messages[i].removeEventListener('click', onPageClick);
     }
-
-    document.removeEventListener('click', onPageClick);
   };
 
   var initPage = function () {

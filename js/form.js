@@ -63,6 +63,21 @@
     }
   };
 
+  var priceCustomValidation = function () {
+    var adFormPriceInputValue = parseInt(adFormPriceInput.value, 10);
+    if (adFormTypeSelect.value === 'bungalo' && adFormPriceInputValue < 0) {
+      adFormPriceInput.setCustomValidity('Цена за ночь в бунгало должна быть минимум 0 рублей');
+    } else if (adFormTypeSelect.value === 'flat' && adFormPriceInputValue < 1000) {
+      adFormPriceInput.setCustomValidity('Цена за ночь в квартире должна быть минимум 1000 рублей');
+    } else if (adFormTypeSelect.value === 'house' && adFormPriceInputValue < 5000) {
+      adFormPriceInput.setCustomValidity('Цена за ночь в доме должна быть минимум 5000 рублей');
+    } else if (adFormTypeSelect.value === 'palace' && adFormPriceInputValue < 10000) {
+      adFormPriceInput.setCustomValidity('Цена за ночь во дворце должна быть минимум 10000 рублей');
+    } else {
+      adFormPriceInput.setCustomValidity('');
+    }
+  };
+
   var deactivateAdForm = function () {
     resetAdForm();
     adForm.classList.add('ad-form--disabled');
@@ -75,6 +90,7 @@
     deactivateAdForm();
     roomNumberSelect.addEventListener('change', roomCapacityCustomValidation);
     capacitySelect.addEventListener('change', roomCapacityCustomValidation);
+    adFormPriceInput.addEventListener('change', priceCustomValidation);
     fillInitialAddressValue();
   };
 
@@ -89,6 +105,7 @@
 
   var resetAdForm = function () {
     adForm.reset();
+    adFormPriceInput.placeholder = 1000;
     document.querySelector('.ad-form-header__preview img').src = 'img/muffin-grey.svg';
     document.querySelector('.ad-form__photo').innerHTML = '';
   };
@@ -123,6 +140,7 @@
 
     adFormPriceInput.min = minPrice;
     adFormPriceInput.placeholder = minPrice;
+    priceCustomValidation();
   };
 
   var onAdFormTimeinSelectChange = function () {
