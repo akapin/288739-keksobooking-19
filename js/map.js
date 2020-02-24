@@ -2,7 +2,7 @@
 
 (function () {
   var URL = 'https://js.dump.academy/keksobooking/data';
-  var mapConstraint = {
+  var MapConstraint = {
     LEFT: 0,
     RIGHT: 1200,
     TOP: 130,
@@ -180,6 +180,6 @@
     init: initMap,
     activate: activateMap,
     deactivate: deactivateMap,
-    constraint: mapConstraint
+    constraint: MapConstraint
   };
 })();

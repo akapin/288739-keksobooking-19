@@ -4,15 +4,15 @@
   var ENTER_KEY = 'Enter';
   var MOUSE_BUTTON_LEFT_CODE = 0;
   var OFFERS_MAX_NUMBER = 5;
-  var offerPinLocationShift = {
+  var OfferPinLocationShift = {
     X: -25,
     Y: -70,
   };
-  var activePageMainPinLocationShift = {
+  var ActivePageMainPinLocationShift = {
     X: 32.5,
     Y: 87,
   };
-  var inactivePageMainPinLocationShift = {
+  var InactivePageMainPinLocationShift = {
     X: 32.5,
     Y: 32.5,
   };
@@ -27,7 +27,7 @@
       .querySelector('.map__pin');
     var pinElement = pinTemplate.cloneNode(true);
 
-    pinElement.style = 'left: ' + (offer.location.x + offerPinLocationShift.X) + 'px; top: ' + (offer.location.y + offerPinLocationShift.Y) + 'px;';
+    pinElement.style = 'left: ' + (offer.location.x + OfferPinLocationShift.X) + 'px; top: ' + (offer.location.y + OfferPinLocationShift.Y) + 'px;';
     pinElement.querySelector('img').src = offer.author.avatar;
     pinElement.querySelector('img').alt = offer.offer.title;
 
@@ -116,7 +116,7 @@
     deactivate: deactivateMapPin,
     addEventListeners: addMainPinEventListeners,
     removeEventListeners: removeMainPinEventListeners,
-    activePageMainLocationShift: activePageMainPinLocationShift,
-    inactivePageMainLocationShift: inactivePageMainPinLocationShift,
+    activePageMainLocationShift: ActivePageMainPinLocationShift,
+    inactivePageMainLocationShift: InactivePageMainPinLocationShift,
   };
 })();
