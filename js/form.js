@@ -30,9 +30,15 @@
     adFormAddressFieldElement.value = addressX + ', ' + addressY;
   };
 
-  var onAdFormRoomNumberSelectElementChange = roomCapacityCustomValidation;
-  var onAdFormCapacitySelectElementChange = roomCapacityCustomValidation;
-  var onAdFormPriceInputElementChange = priceCustomValidation;
+  var onAdFormRoomNumberSelectElementChange = function () {
+    roomCapacityCustomValidation();
+  };
+  var onAdFormCapacitySelectElementChange = function () {
+    roomCapacityCustomValidation();
+  };
+  var onAdFormPriceInputElementChange = function () {
+    priceCustomValidation();
+  };
 
   var roomCapacityCustomValidation = function () {
     var capacitySelectOptionElements = adFormCapacitySelectElement.querySelectorAll('option');
@@ -91,7 +97,7 @@
     adFormTimeoutSelectElement.addEventListener('change', onAdFormTimeoutSelectChange);
     adFormRoomNumberSelectElement.addEventListener('change', onAdFormRoomNumberSelectElementChange);
     adFormCapacitySelectElement.addEventListener('change', onAdFormCapacitySelectElementChange);
-    adFormPriceInputElement.addEventListener('change', onAdFormPriceInputElementChange);
+    adFormPriceInputElement.addEventListener('input', onAdFormPriceInputElementChange);
   };
 
   var removeAdFormEventListeners = function () {
@@ -102,7 +108,7 @@
     adFormTimeoutSelectElement.removeEventListener('change', onAdFormTimeoutSelectChange);
     adFormRoomNumberSelectElement.removeEventListener('change', onAdFormRoomNumberSelectElementChange);
     adFormCapacitySelectElement.removeEventListener('change', onAdFormCapacitySelectElementChange);
-    adFormPriceInputElement.removeEventListener('change', onAdFormPriceInputElementChange);
+    adFormPriceInputElement.removeEventListener('input', onAdFormPriceInputElementChange);
   };
 
   var deactivateAdForm = function () {
