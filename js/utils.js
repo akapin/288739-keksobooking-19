@@ -16,8 +16,7 @@
     var minNumberOfNewArrayItems = 1;
     var maxNumberOfNewArrayItems = array.length;
     var numberOfNewArrayItems = getRandomNumber(minNumberOfNewArrayItems, maxNumberOfNewArrayItems);
-    var newArray = array.splice(startIndex, numberOfNewArrayItems);
-    return newArray;
+    return array.splice(startIndex, numberOfNewArrayItems);
   };
 
   window.utils = {

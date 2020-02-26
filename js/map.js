@@ -2,6 +2,10 @@
 
 (function () {
   var URL = 'https://js.dump.academy/keksobooking/data';
+  var HousingPriceThreshold = {
+    LOW: 10000,
+    HIGH: 50000
+  };
   var MapConstraint = {
     LEFT: 0,
     RIGHT: 1200,
@@ -34,46 +38,44 @@
     var housingRoomsFilterValue = housingRoomsFilterElement.options[housingRoomsFilterElement.selectedIndex].value;
     var housingGuestsFilterValue = housingGuestsFilterElement.options[housingGuestsFilterElement.selectedIndex].value;
 
-    var filteredOffers = offersData
-    .filter(function (item) {
-      return housingTypeFilterValue === 'any' ? true : item.offer.type === housingTypeFilterValue;
-    })
-    .filter(function (item) {
-      if (housingPriceFilterValue === 'any') {
-        return true;
-      } else if (housingPriceFilterValue === 'middle') {
-        return item.offer.price >= 10000 && item.offer.price <= 50000;
-      } else if (housingPriceFilterValue === 'low') {
-        return item.offer.price < 10000;
-      }
-      return item.offer.price > 50000;
-    })
-    .filter(function (item) {
-      return housingRoomsFilterValue === 'any' ? true : item.offer.rooms === parseInt(housingRoomsFilterValue, 10);
-    })
-    .filter(function (item) {
-      return housingGuestsFilterValue === 'any' ? true : item.offer.guests === parseInt(housingGuestsFilterValue, 10);
-    })
-    .filter(function (item) {
-      return !featureWifiFilterElement.checked ? true : item.offer.features.includes('wifi');
-    })
-    .filter(function (item) {
-      return !featureDishwasherFilterElement.checked ? true : item.offer.features.includes('dishwasher');
-    })
-    .filter(function (item) {
-      return !featureParkingFilterElement.checked ? true : item.offer.features.includes('parking');
-    })
-    .filter(function (item) {
-      return !featureWasherFilterElement.checked ? true : item.offer.features.includes('washer');
-    })
-    .filter(function (item) {
-      return !featureElevatorFilterElement.checked ? true : item.offer.features.includes('elevator');
-    })
-    .filter(function (item) {
-      return !featureConditionerFilterElement.checked ? true : item.offer.features.includes('conditioner');
-    });
-
-    return filteredOffers;
+    return offersData
+      .filter(function (item) {
+        return housingTypeFilterValue === 'any' ? true : item.offer.type === housingTypeFilterValue;
+      })
+      .filter(function (item) {
+        if (housingPriceFilterValue === 'any') {
+          return true;
+        } else if (housingPriceFilterValue === 'middle') {
+          return item.offer.price >= HousingPriceThreshold.LOW && item.offer.price <= HousingPriceThreshold.HIGH;
+        } else if (housingPriceFilterValue === 'low') {
+          return item.offer.price < HousingPriceThreshold.LOW;
+        }
+        return item.offer.price > HousingPriceThreshold.HIGH;
+      })
+      .filter(function (item) {
+        return housingRoomsFilterValue === 'any' ? true : item.offer.rooms === parseInt(housingRoomsFilterValue, 10);
+      })
+      .filter(function (item) {
+        return housingGuestsFilterValue === 'any' ? true : item.offer.guests === parseInt(housingGuestsFilterValue, 10);
+      })
+      .filter(function (item) {
+        return !featureWifiFilterElement.checked ? true : item.offer.features.includes('wifi');
+      })
+      .filter(function (item) {
+        return !featureDishwasherFilterElement.checked ? true : item.offer.features.includes('dishwasher');
+      })
+      .filter(function (item) {
+        return !featureParkingFilterElement.checked ? true : item.offer.features.includes('parking');
+      })
+      .filter(function (item) {
+        return !featureWasherFilterElement.checked ? true : item.offer.features.includes('washer');
+      })
+      .filter(function (item) {
+        return !featureElevatorFilterElement.checked ? true : item.offer.features.includes('elevator');
+      })
+      .filter(function (item) {
+        return !featureConditionerFilterElement.checked ? true : item.offer.features.includes('conditioner');
+      });
   };
 
   var onFormChange = window.debounce(function () {
